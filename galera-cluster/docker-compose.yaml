@@ -1,0 +1,30 @@
+services:
+  node-1:
+    image: mariadb:10.6.12
+    # command: '/usr/bin/galera_new_cluster && tail -f /dev/null'
+    restart: always
+    ports:
+      - "3406:3306"
+    networks:
+      - galera-cluster
+    volumes:
+      - ./node-1/var/lib/mysql:/var/lib/mysql
+      - ./node-1/etc/mysql:/etc/mysql
+    environment:
+      # _WSREP_NEW_CLUSTER: '--wsrep-new-cluster'
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+  node-2:
+    image: mariadb:10.6.12
+    restart: always
+    ports:
+      - "3407:3306"
+    networks:
+      - galera-cluster
+    volumes:
+      - ./node-2/var/lib/mysql:/var/lib/mysql
+      - ./node-2/etc/mysql:/etc/mysql
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+networks:
+  galera-cluster:
+    driver: bridge
