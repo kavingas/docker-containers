@@ -1,0 +1,8 @@
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.21
+    environment:
+      discovery.type: single-node
+    restart: always
+    ports:
+      - "9200:9200"

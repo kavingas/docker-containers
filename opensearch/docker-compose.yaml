@@ -1,0 +1,8 @@
+services:
+  opensearch:
+    build: .
+    restart: always
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9201:9200"

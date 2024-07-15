@@ -16,6 +16,8 @@ services:
   node-2:
     image: mariadb:10.6.12
     restart: always
+    depends_on:
+      - node-1
     ports:
       - "3407:3306"
     networks:
