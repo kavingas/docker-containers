@@ -1,3 +1,4 @@
 galera-cluster/node-1/var
 galera-cluster/node-2/var
 tmp
+adobe-commerce/mariadb/var

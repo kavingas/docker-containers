@@ -1,0 +1,28 @@
+services:
+  php82:
+    build: ./php
+    restart: no
+    ports:
+      - "80:80"
+    volumes:
+      - ./php/usr/local/etc/php:/usr/local/etc/php/conf.d
+      - ./php/etc/passwd:/etc/passwd
+      - ./apache2/etc:/etc/apache2
+      - /home/kavinga/Sites:/var/www/html
+  mariadb:
+    image: mariadb:10.6.12
+    restart: no
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb/var/lib/mysql:/var/lib/mysql
+      - ./mariadb/etc/mysql:/etc/mysql
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+  opensearch:
+    build: ./opensearch
+    restart: no
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
