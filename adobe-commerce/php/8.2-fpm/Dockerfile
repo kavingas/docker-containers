@@ -12,7 +12,7 @@ RUN if [ $(uname -m) = "x86_64" ]; then mailhog_arch="amd64"; else mailhog_arch=
 
 FROM php:8.2-fpm
 
-ARG MAGENTO_ROOT=/app
+ARG MAGENTO_ROOT=/var/www/html
 
 ENV PHP_MEMORY_LIMIT 2G
 ENV PHP_VALIDATE_TIMESTAMPS 1
@@ -54,6 +54,7 @@ RUN apt-get update \
   libzip-dev \
   zip \
   python3-yaml \
+  mariadb-client \
   && rm -rf /var/lib/apt/lists/*
 
 # Install MailHog
@@ -125,6 +126,8 @@ RUN rm -f /usr/local/etc/php/conf.d/*sodium.ini \
 # COPY etc/php-fpm.conf /usr/local/etc/
 # COPY etc/php-gnupg.ini /usr/local/etc/php/conf.d/gnupg.ini
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.2.4 --filename=composer
+
 RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
@@ -140,6 +143,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 
 WORKDIR ${MAGENTO_ROOT}
 
-USER root
+USER www
 
 CMD ["php-fpm", "-R"]
