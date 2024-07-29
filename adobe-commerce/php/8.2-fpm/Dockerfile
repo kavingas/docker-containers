@@ -31,6 +31,7 @@ RUN apt-get update \
   apt-utils \
   sendmail-bin \
   sendmail \
+  unzip \
   sudo \
   iproute2 \
   git \
@@ -128,7 +129,7 @@ RUN rm -f /usr/local/etc/php/conf.d/*sodium.ini \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.2.4 --filename=composer
 
-RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
+#RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
@@ -137,12 +138,12 @@ RUN mkdir -p ${MAGENTO_ROOT}
 
 VOLUME ${MAGENTO_ROOT}
 
-RUN chown -R www:www /usr/local /var/www /var/log /usr/local/etc/php/conf.d ${MAGENTO_ROOT}
+RUN chown -R www-data:www-data /usr/local /var/www /var/log /usr/local/etc/php/conf.d ${MAGENTO_ROOT}
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 WORKDIR ${MAGENTO_ROOT}
 
-USER www
+USER www-data
 
 CMD ["php-fpm", "-R"]
