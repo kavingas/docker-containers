@@ -4,3 +4,4 @@ tmp
 adobe-commerce/mariadb/var
 adobe-commerce/utils/.composer/auth.json
 adobe-commerce/utils/.m2install.conf
+adobe-commerce/utils/.cache

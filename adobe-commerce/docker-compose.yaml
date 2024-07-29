@@ -24,6 +24,7 @@ services:
       - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
       - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
       - ${PWD}/utils/.composer:/var/www/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/.cache/composer
       - ${HOME}/Sites:/var/www/html
   mariadb:
     image: mariadb:10.6.12
@@ -37,6 +38,13 @@ services:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
   opensearch:
     build: ${PWD}/opensearch
+    restart: no
+    environment:
+      discovery.type: single-node
+    # ports:
+    #   - "9200:9200"
+  elasticsearch:
+    build: ${PWD}/elasticsearch/7.11
     restart: no
     environment:
       discovery.type: single-node
