@@ -10,7 +10,7 @@ RUN if [ $(uname -m) = "x86_64" ]; then mailhog_arch="amd64"; else mailhog_arch=
     && go get . \
     && GOOS=linux GOARCH=${mailhog_arch} go build -o mhsendmail .
 
-FROM php:8.2-fpm
+FROM php:8.1.1-fpm
 
 ARG MAGENTO_ROOT=/var/www/html
 
@@ -31,7 +31,6 @@ RUN apt-get update \
   apt-utils \
   sendmail-bin \
   sendmail \
-  unzip \
   sudo \
   iproute2 \
   git \
@@ -54,7 +53,6 @@ RUN apt-get update \
   libyaml-dev \
   libzip-dev \
   zip \
-  python3-yaml \
   mariadb-client \
   && rm -rf /var/lib/apt/lists/*
 
@@ -101,12 +99,29 @@ RUN pecl install -o -f \
   pcov \
   raphf \
   redis \
-  xdebug-3.2.0 \
+  xdebug-3.1.2 \
   xmlrpc-1.0.0RC3 \
   yaml
 
 RUN if [ $(uname -m) = "x86_64" ]; then ldap_arch="x86_64-linux-gnu"; else ldap_arch="aarch64-linux-gnu"; fi \
   && docker-php-ext-configure ldap --with-libdir=lib/${ldap_arch}
+RUN mkdir -p /tmp/zoo \
+  && cd /tmp/zoo \
+  && git clone https://github.com/php-zookeeper/php-zookeeper.git \
+  && curl -LO https://archive.apache.org/dist/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz \
+  && tar -xf zookeeper-3.4.14.tar.gz \
+  && cp zookeeper-3.4.14/zookeeper-client/zookeeper-client-c/generated/zookeeper.jute.h zookeeper-3.4.14/zookeeper-client/zookeeper-client-c/include \
+  && cd zookeeper-3.4.14/zookeeper-client/zookeeper-client-c \
+  && ./configure \
+  && sed -i 's/CFLAGS = -g -O2 -D_GNU_SOURCE/CFLAGS = -g -O2 -D_GNU_SOURCE -Wno-error=format-overflow -Wno-error=stringop-truncation/g' Makefile \
+  && make \
+  && make install \
+  && ldconfig \
+  && cd /tmp/zoo/php-zookeeper \
+  && phpize \
+  && ./configure --with-libzookeeper-dir=../zookeeper-3.4.14/zookeeper-client/zookeeper-client-c \
+  && make \
+  && make install
 RUN rm -f /usr/local/etc/php/conf.d/*sodium.ini \
   && rm -f /usr/local/lib/php/extensions/*/*sodium.so \
   && apt-get remove libsodium* -y \
@@ -119,15 +134,15 @@ RUN rm -f /usr/local/etc/php/conf.d/*sodium.ini \
   && cd / \
   && rm -rf /tmp/libsodium \
   && pecl install -o -f libsodium
-
-# COPY etc/php-fpm.ini /usr/local/etc/php/conf.d/zz-magento.ini
-# COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
-# COPY etc/php-pcov.ini /usr/local/etc/php/conf.d/zz-pcov-settings.ini
-# COPY etc/mail.ini /usr/local/etc/php/conf.d/zz-mail.ini
-# COPY etc/php-fpm.conf /usr/local/etc/
-# COPY etc/php-gnupg.ini /usr/local/etc/php/conf.d/gnupg.ini
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.2.4 --filename=composer
+RUN cd /tmp \
+  && if [ $(uname -m) = "x86_64" ]; then ioncube_arch="x86-64"; else ioncube_arch="aarch64"; fi \
+  && curl -O https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_${ioncube_arch}.tar.gz \
+  && tar zxvf ioncube_loaders_lin_${ioncube_arch}.tar.gz \
+  && export PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;") \
+  && export PHP_EXT_DIR=$(php-config --extension-dir) \
+  && cp "./ioncube/ioncube_loader_lin_${PHP_VERSION}.so" "${PHP_EXT_DIR}/ioncube.so" \
+  && rm -rf ./ioncube \
+  && rm ioncube_loaders_lin_${ioncube_arch}.tar.gz
 
 RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 

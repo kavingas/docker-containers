@@ -1,3 +1,4 @@
+```
 php -d memory_limit=4G bin/magento setup:install \
 --base-url=http://127.0.0.1/m247/pub/ \
 --db-host=mariadb \
@@ -17,3 +18,21 @@ php -d memory_limit=4G bin/magento setup:install \
 --opensearch-host=opensearch \
 --opensearch-port=9200 \
 --opensearch-index-prefix=m247
+```
+
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/var/www/html/${workspaceFolderBasename}":"${workspaceFolder}"
+            },
+        }
+    ]
+}
+```

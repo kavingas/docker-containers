@@ -10,7 +10,7 @@ RUN if [ $(uname -m) = "x86_64" ]; then mailhog_arch="amd64"; else mailhog_arch=
     && go get . \
     && GOOS=linux GOARCH=${mailhog_arch} go build -o mhsendmail .
 
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 ARG MAGENTO_ROOT=/var/www/html
 
@@ -31,7 +31,6 @@ RUN apt-get update \
   apt-utils \
   sendmail-bin \
   sendmail \
-  unzip \
   sudo \
   iproute2 \
   git \
@@ -101,7 +100,7 @@ RUN pecl install -o -f \
   pcov \
   raphf \
   redis \
-  xdebug-3.2.0 \
+  xdebug-3.3.0 \
   xmlrpc-1.0.0RC3 \
   yaml
 
@@ -119,15 +118,6 @@ RUN rm -f /usr/local/etc/php/conf.d/*sodium.ini \
   && cd / \
   && rm -rf /tmp/libsodium \
   && pecl install -o -f libsodium
-
-# COPY etc/php-fpm.ini /usr/local/etc/php/conf.d/zz-magento.ini
-# COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
-# COPY etc/php-pcov.ini /usr/local/etc/php/conf.d/zz-pcov-settings.ini
-# COPY etc/mail.ini /usr/local/etc/php/conf.d/zz-mail.ini
-# COPY etc/php-fpm.conf /usr/local/etc/
-# COPY etc/php-gnupg.ini /usr/local/etc/php/conf.d/gnupg.ini
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.2.4 --filename=composer
 
 RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 
