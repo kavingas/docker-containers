@@ -144,6 +144,8 @@ RUN cd /tmp \
   && rm -rf ./ioncube \
   && rm ioncube_loaders_lin_${ioncube_arch}.tar.gz
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=2.2.4 --filename=composer
+
 RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh

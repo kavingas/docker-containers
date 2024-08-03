@@ -20,8 +20,8 @@ services:
       - ${PWD}/php/8.1-fpm/etc/php-gnupg.ini:/usr/local/etc/php/conf.d/gnupg.ini
       - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
       - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
-      - ${PWD}/utils/.composer:/var/www/.composer
-      - ${PWD}/utils/.cache/composer:/var/www/.cache/composer
+      - ${PWD}/utils/.composer:/var/www/html/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/html/.cache/composer
       - ${HOME}/Sites:/var/www/html
     environment:
       MAGENTO_RUN_MODE: developer
@@ -39,8 +39,8 @@ services:
       - ${PWD}/php/8.2-fpm/etc/php-gnupg.ini:/usr/local/etc/php/conf.d/gnupg.ini
       - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
       - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
-      - ${PWD}/utils/.composer:/var/www/.composer
-      - ${PWD}/utils/.cache/composer:/var/www/.cache/composer
+      - ${PWD}/utils/.composer:/var/www/html/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/html/.cache/composer
       - ${HOME}/Sites:/var/www/html
     environment:
       MAGENTO_RUN_MODE: developer
@@ -58,8 +58,8 @@ services:
       - ${PWD}/php/8.3-fpm/etc/php-gnupg.ini:/usr/local/etc/php/conf.d/gnupg.ini
       - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
       - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
-      - ${PWD}/utils/.composer:/var/www/.composer
-      - ${PWD}/utils/.cache/composer:/var/www/.cache/composer
+      - ${PWD}/utils/.composer:/var/www/html/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/html/.cache/composer
       - ${HOME}/Sites:/var/www/html
     environment:
       MAGENTO_RUN_MODE: developer
