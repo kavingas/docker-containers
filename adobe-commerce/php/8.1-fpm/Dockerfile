@@ -55,6 +55,7 @@ RUN apt-get update \
   zip \
   mariadb-client \
   locales \
+  unzip \
   && rm -rf /var/lib/apt/lists/*
 
 RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
