@@ -27,6 +27,27 @@ services:
       MAGENTO_RUN_MODE: developer
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "php83.125.168.126.179.nip.io:host-gateway"
+  fpm81-debug:
+    build: ${PWD}/php/8.1-fpm/
+    restart: no
+    volumes:
+      - ${PWD}/php/8.1-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
+      - ${PWD}/php/8.1-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
+      - ${PWD}/php/8.1-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
+      - ${PWD}/php/8.1-fpm/etc/mail.ini:/usr/local/etc/php/conf.d/zz-mail.ini
+      - ${PWD}/php/8.1-fpm/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${PWD}/php/8.1-fpm/etc/php-gnupg.ini:/usr/local/etc/php/conf.d/gnupg.ini
+      - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
+      - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
+      - ${PWD}/utils/.composer:/var/www/html/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/html/.cache/composer
+      - ${HOME}/Sites:/var/www/html
+    environment:
+      MAGENTO_RUN_MODE: developer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "php83.125.168.126.179.nip.io:host-gateway"
   fpm82:
     build: ${PWD}/php/8.2-fpm/
     restart: no
@@ -46,6 +67,27 @@ services:
       MAGENTO_RUN_MODE: developer
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "php83.125.168.126.179.nip.io:host-gateway"
+  fpm82-debug:
+    build: ${PWD}/php/8.2-fpm/
+    restart: no
+    volumes:
+      - ${PWD}/php/8.2-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
+      - ${PWD}/php/8.2-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
+      - ${PWD}/php/8.2-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
+      - ${PWD}/php/8.2-fpm/etc/mail.ini:/usr/local/etc/php/conf.d/zz-mail.ini
+      - ${PWD}/php/8.2-fpm/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${PWD}/php/8.2-fpm/etc/php-gnupg.ini:/usr/local/etc/php/conf.d/gnupg.ini
+      - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
+      - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
+      - ${PWD}/utils/.composer:/var/www/html/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/html/.cache/composer
+      - ${HOME}/Sites:/var/www/html
+    environment:
+      MAGENTO_RUN_MODE: developer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "php83.125.168.126.179.nip.io:host-gateway"
   fpm83:
     build: ${PWD}/php/8.3-fpm/
     restart: no
@@ -65,11 +107,30 @@ services:
       MAGENTO_RUN_MODE: developer
     extra_hosts:
       - "host.docker.internal:host-gateway"
-  mariadb:
-    image: mariadb:10.6.12
+      - "php83.125.168.126.179.nip.io:host-gateway"
+  fpm83-debug:
+    build: ${PWD}/php/8.3-fpm/
     restart: no
-    ports:
-      - "3306:3306"
+    volumes:
+      - ${PWD}/php/8.3-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
+      - ${PWD}/php/8.3-fpm/etc/php-xdebug-enabled.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
+      - ${PWD}/php/8.3-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
+      - ${PWD}/php/8.3-fpm/etc/mail.ini:/usr/local/etc/php/conf.d/zz-mail.ini
+      - ${PWD}/php/8.3-fpm/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${PWD}/php/8.3-fpm/etc/php-gnupg.ini:/usr/local/etc/php/conf.d/gnupg.ini
+      - ${PWD}/utils/m2install.sh:/usr/local/bin/m2install.sh
+      - ${PWD}/utils/.m2install.conf:/var/www/.m2install.conf
+      - ${PWD}/utils/.composer:/var/www/html/.composer
+      - ${PWD}/utils/.cache/composer:/var/www/html/.cache/composer
+      - ${HOME}/Sites:/var/www/html
+    environment:
+      MAGENTO_RUN_MODE: developer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "php83.125.168.126.179.nip.io:host-gateway"
+  mariadb:
+    image: mariadb:10.2
+    restart: no
     volumes:
       - ${PWD}/mariadb/var/lib/mysql:/var/lib/mysql
       - ${PWD}/mariadb/etc/mysql:/etc/mysql

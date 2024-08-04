@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ $1 -eq 1 ]; then
+    echo "Enabling Xdebug"
+    cp php/8.1-fpm/etc/php-xdebug-enabled php/8.1-fpm/etc/php-xdebug.ini
+else
+    echo "Disabling Xdebug"
+    cp php/8.1-fpm/etc/php-xdebug-disabled php/8.1-fpm/etc/php-xdebug.ini
+fi
+docker compose restart fpm81 fpm82 fpm83

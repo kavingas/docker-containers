@@ -55,7 +55,13 @@ RUN apt-get update \
   zip \
   python3-yaml \
   mariadb-client \
+  locales \
   && rm -rf /var/lib/apt/lists/*
+
+RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && echo "LANG=en_US.UTF-8" > /etc/locale.conf \
+    && locale-gen en_US.UTF-8
 
 # Install MailHog
 COPY --from=builder /go/src/github.com/mailhog/mhsendmail/mhsendmail /usr/local/bin/
