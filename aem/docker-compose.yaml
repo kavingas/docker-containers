@@ -2,7 +2,7 @@ services:
   aem-author:
     build:
       context: .
-    command: "java -jar /opt/aem/author/aem-author-p4502.jar" 
+    command: "java -Xms4g -Xmx8g  -Djava.awt.headless=true -jar /opt/aem/author/aem-author-p4502.jar" 
     ports:
       - "4502:4502"
     environment:
@@ -13,7 +13,7 @@ services:
   aem-publisher:
     build:
       context: .
-    command: "java -jar /opt/aem/publish/aem-publish-p4503.jar" 
+    command: "java -Xms4g -Xmx8g  -Djava.awt.headless=true -jar /opt/aem/publish/aem-publish-p4503.jar" 
     ports:
       - "4503:4503"
     environment:
