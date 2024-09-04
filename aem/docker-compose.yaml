@@ -1,0 +1,23 @@
+services:
+  aem-author:
+    build:
+      context: .
+    command: "java -jar /opt/aem/author/aem-author-p4502.jar" 
+    ports:
+      - "4502:4502"
+    environment:
+      - CQ_PORT=4502
+      - CQ_RUNMODE=author
+    volumes:
+      - ./author:/opt/aem/author
+  aem-publisher:
+    build:
+      context: .
+    command: "java -jar /opt/aem/publish/aem-publish-p4503.jar" 
+    ports:
+      - "4503:4503"
+    environment:
+      - CQ_PORT=4503
+      - CQ_RUNMODE=publish
+    volumes:
+      - ./publish:/opt/aem/publish
