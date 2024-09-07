@@ -7,7 +7,10 @@ services:
       - "443:443"
     volumes:
       - ${PWD}/apache2/etc/conf:/usr/local/apache2/conf
+      - ${PWD}/apache2/modules/mod_dispatcher.so:/usr/local/apache2/modules/mod_dispatcher.so
       - ${HOME}/Sites:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   fpm81:
     build: ${PWD}/php/8.1-fpm/
     restart: no
@@ -141,17 +144,16 @@ services:
     restart: no
     environment:
       discovery.type: single-node
+    volumes:
+      - ./opensearch/data:/usr/share/opensearch/data
     # ports:
     #   - "9200:9200"
   elasticsearch:
     build: ${PWD}/elasticsearch/7.11
     restart: no
     volumes:
-    - data01:/usr/share/elasticsearch/data
+    - ./elasticsearch/data:/usr/share/elasticsearch/data
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     # ports:
     #   - "9200:9200"
-volumes:
-  data01:
-    driver: local
