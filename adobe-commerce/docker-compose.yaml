@@ -145,15 +145,19 @@ services:
     environment:
       discovery.type: single-node
     volumes:
-      - ./opensearch/data:/usr/share/opensearch/data
+      - opensearch_data:/usr/share/opensearch/data
     # ports:
     #   - "9200:9200"
+
   elasticsearch:
     build: ${PWD}/elasticsearch/7.11
     restart: no
     volumes:
-    - ./elasticsearch/data:/usr/share/elasticsearch/data
+    - elasticsearch_data:/usr/share/elasticsearch/data
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     # ports:
     #   - "9200:9200"
+volumes:
+  opensearch_data:
+  elasticsearch_data:
