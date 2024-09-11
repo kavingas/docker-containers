@@ -1,30 +1,26 @@
-# Use an official Ubuntu base image
-FROM ubuntu:20.04
+# Step 1: Use the base OpenJDK 11 image
+FROM adoptopenjdk:11-jre-hotspot
 
-# Set the environment variable for the non-interactive installation
-ENV DEBIAN_FRONTEND=noninteractive
+# Step 2: Set environment variables
+ENV AEM_HOME=/opt/aem
+ENV AEM_JAR=aem-quickstart.jar
+ENV AUTHOR_PORT=4502
+ENV AEM_RUNMODE=author
+ENV JAVA_OPTS="-Xms2g -Xmx4g -XX:MaxPermSize=512m"
 
-# Update package lists and install necessary dependencies
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    --no-install-recommends
+# Step 3: Create necessary directories
+RUN mkdir -p ${AEM_HOME} ${AEM_HOME}/crx-quickstart ${AEM_HOME}/license
 
-# Install OpenJDK 11 (Java 11 Runtime)
-RUN apt-get update && apt-get install -y \
-    openjdk-11-jre-headless \
-    --no-install-recommends
+# Step 4: Copy the AEM jar and license file into the container
+COPY ${AEM_JAR} ${AEM_HOME}/${AEM_JAR}
 
-# Clean up APT when done to reduce image size
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Step 5: Expose port for AEM Author
+EXPOSE ${AUTHOR_PORT}
 
-# Set JAVA_HOME environment variable for convenience
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# Step 6: Set the working directory
+WORKDIR ${AEM_HOME}
 
-# Verify Java installation
-RUN java -version
+STOPSIGNAL SIGINT
 
-# Default command
-CMD ["java", "-version"]
+# Step 7: Command to run AEM Author
+CMD ["sh", "-c", "java $JAVA_OPTS -jar $AEM_JAR -r $AEM_RUNMODE -p $AUTHOR_PORT"]

@@ -1,0 +1,14 @@
+services:
+  mariadb:
+    image: mariadb:10.5.16
+    ports:
+      - "3406:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mariadb_data:
+    driver: local
