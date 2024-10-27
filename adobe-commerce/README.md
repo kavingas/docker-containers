@@ -58,3 +58,9 @@ m2install.sh -f -v 2.4.7-p1 -s composer
 ```
 composer require magento/module-bundle-sample-data magento/module-catalog-sample-data magento/module-sales-sample-data magento/module-customer-sample-data magento/module-cms-sample-data magento/module-widget-sample-data magento/module-theme-sample-data magento/module-downloadable-sample-data magento/module-wishlist-sample-data magento/module-review-sample-data magento/module-tax-sample-data magento/module-configurable-sample-data magento/module-product-links-sample-data magento/module-msrp-sample-data magento/module-grouped-product-sample-data magento/module-catalog-rule-sample-data magento/module-sales-rule-sample-data magento/module-swatches-sample-data magento/module-offline-shipping-sample-data magento/sample-data-media
 ```
+
+## RabbitMQ
+
+```
+bin/magento setup:config:set --amqp-host="rabbitmq" --amqp-port="5672" --amqp-user="guest" --amqp-password="guest" --amqp-virtualhost="/"
+```

@@ -16,7 +16,6 @@ services:
     restart: no
     volumes:
       - ${PWD}/php/8.1-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
-      - ${PWD}/php/8.1-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
       - ${PWD}/php/8.1-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
       - ${PWD}/php/8.1-fpm/etc/mail.ini:/usr/local/etc/php/conf.d/zz-mail.ini
       - ${PWD}/php/8.1-fpm/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -56,7 +55,6 @@ services:
     restart: no
     volumes:
       - ${PWD}/php/8.2-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
-      - ${PWD}/php/8.2-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
       - ${PWD}/php/8.2-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
       - ${PWD}/php/8.2-fpm/etc/mail.ini:/usr/local/etc/php/conf.d/zz-mail.ini
       - ${PWD}/php/8.2-fpm/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -96,7 +94,6 @@ services:
     restart: no
     volumes:
       - ${PWD}/php/8.3-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
-      - ${PWD}/php/8.3-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
       - ${PWD}/php/8.3-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
       - ${PWD}/php/8.3-fpm/etc/mail.ini:/usr/local/etc/php/conf.d/zz-mail.ini
       - ${PWD}/php/8.3-fpm/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -148,7 +145,6 @@ services:
       - opensearch_data:/usr/share/opensearch/data
     # ports:
     #   - "9200:9200"
-
   elasticsearch:
     build: ${PWD}/elasticsearch/7.11
     restart: no
@@ -158,6 +154,11 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     # ports:
     #   - "9200:9200"
+  rabbitmq:
+    image: rabbitmq:3.13.7-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 volumes:
   opensearch_data:
   elasticsearch_data:
