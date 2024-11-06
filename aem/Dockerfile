@@ -23,4 +23,4 @@ WORKDIR ${AEM_HOME}
 STOPSIGNAL SIGINT
 
 # Step 7: Command to run AEM Author
-CMD ["sh", "-c", "java $JAVA_OPTS -jar $AEM_JAR -r $AEM_RUNMODE -p $AUTHOR_PORT"]
+CMD ["sh", "-c", "java $JAVA_OPTS -jar $AEM_JAR -nofork -r $AEM_RUNMODE -p $AUTHOR_PORT"]
