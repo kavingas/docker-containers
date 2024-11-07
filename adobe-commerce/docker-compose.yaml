@@ -155,10 +155,14 @@ services:
     # ports:
     #   - "9200:9200"
   rabbitmq:
+    hostname: 'rabbitmq'
     image: rabbitmq:3.13.7-management-alpine
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 volumes:
   opensearch_data:
   elasticsearch_data:
+  rabbitmq_data:
