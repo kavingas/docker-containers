@@ -1,19 +1,18 @@
 services:
   apache2:
-    image: httpd:2.4
-    restart: no
+    build: ${PWD}/apache2
+    restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ${PWD}/apache2/etc/conf:/usr/local/apache2/conf
-      - ${PWD}/apache2/modules/mod_dispatcher.so:/usr/local/apache2/modules/mod_dispatcher.so
       - ${HOME}/Sites:/var/www/html
     extra_hosts:
       - "host.docker.internal:host-gateway"
   fpm81:
     build: ${PWD}/php/8.1-fpm/
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/php/8.1-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
       - ${PWD}/php/8.1-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
@@ -32,7 +31,7 @@ services:
       - "php83.125.168.126.179.nip.io:host-gateway"
   fpm81-debug:
     build: ${PWD}/php/8.1-fpm/
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/php/8.1-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
       - ${PWD}/php/8.1-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
@@ -52,7 +51,7 @@ services:
       - "php83.125.168.126.179.nip.io:host-gateway"
   fpm82:
     build: ${PWD}/php/8.2-fpm/
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/php/8.2-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
       - ${PWD}/php/8.2-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
@@ -71,7 +70,7 @@ services:
       - "php83.125.168.126.179.nip.io:host-gateway"
   fpm82-debug:
     build: ${PWD}/php/8.2-fpm/
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/php/8.2-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
       - ${PWD}/php/8.2-fpm/etc/php-xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
@@ -91,7 +90,7 @@ services:
       - "php83.125.168.126.179.nip.io:host-gateway"
   fpm83:
     build: ${PWD}/php/8.3-fpm/
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/php/8.3-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
       - ${PWD}/php/8.3-fpm/etc/php-pcov.ini:/usr/local/etc/php/conf.d/zz-pcov-settings.ini
@@ -110,7 +109,7 @@ services:
       - "php83.125.168.126.179.nip.io:host-gateway"
   fpm83-debug:
     build: ${PWD}/php/8.3-fpm/
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/php/8.3-fpm/etc/php-fpm.ini:/usr/local/etc/php/conf.d/zz-magento.ini
       - ${PWD}/php/8.3-fpm/etc/php-xdebug-enabled.ini:/usr/local/etc/php/conf.d/zz-xdebug-settings.ini
@@ -130,7 +129,7 @@ services:
       - "php83.125.168.126.179.nip.io:host-gateway"
   mariadb:
     image: mariadb:10.2
-    restart: no
+    restart: always
     volumes:
       - ${PWD}/mariadb/var/lib/mysql:/var/lib/mysql
       - ${PWD}/mariadb/etc/mysql:/etc/mysql
@@ -138,16 +137,23 @@ services:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
   opensearch:
     build: ${PWD}/opensearch
-    restart: no
+    restart: always
     environment:
-      discovery.type: single-node
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m  # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - opensearch_data:/usr/share/opensearch/data
     # ports:
     #   - "9200:9200"
   elasticsearch:
     build: ${PWD}/elasticsearch/7.11
-    restart: no
+    restart: always
     volumes:
     - elasticsearch_data:/usr/share/elasticsearch/data
     environment:
