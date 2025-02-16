@@ -1,0 +1,35 @@
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.12.0
+    container_name: opensearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g" # Adjust based on your system
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/opensearch-data:/usr/share/opensearch/data # Persistent data
+      - ./config/opensearch.yml:/usr/share/opensearch/config/opensearch.yml
+    ports:
+      - "9201:9200"
+      - "9601:9600" # Optional performance analyzer port
+    networks:
+      - opensearch-network
+  opensearch-dashboards:
+    build: ${PWD}/opensearch-dashboards
+    container_name: opensearch-dashboards
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      OPENSEARCH_HOSTS: 'http://opensearch:9200'
+    networks:
+      - opensearch-network
+
+networks:
+  opensearch-network:
+    driver: bridge

@@ -5,4 +5,4 @@ services:
     environment:
       discovery.type: single-node
     ports:
-      - "9201:9200"
+      - "9202:9200"

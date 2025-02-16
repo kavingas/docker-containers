@@ -13,6 +13,7 @@ services:
     environment:
       # _WSREP_NEW_CLUSTER: '--wsrep-new-cluster'
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+    mem_limit: 4G
   node-2:
     image: mariadb:10.6.12
     restart: always
@@ -27,6 +28,7 @@ services:
       - ./node-2/etc/mysql:/etc/mysql
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+    mem_limit: 4G
 networks:
   galera-cluster:
     driver: bridge
