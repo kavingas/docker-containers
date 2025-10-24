@@ -23,7 +23,10 @@ services:
     build: ./opensearch/1.2.4
     restart: always
     environment:
-      discovery.type: single-node
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
     ports:
       - "9202:9200"
     ulimits:
@@ -43,6 +46,9 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
     ulimits:
       memlock:
         soft: -1
@@ -57,7 +63,7 @@ services:
       - search-network
 
   # Elasticsearch Dashboard (Kibana 7.11.2)
-  elasticsearch-dashboard:
+  elasticsearch_dashboard:
     image: docker.elastic.co/kibana/kibana:7.11.2
     platform: linux/amd64
     restart: always
@@ -73,8 +79,8 @@ services:
       - search-network
 
   # OpenSearch Dashboard 1.2.4
-  opensearch-dashboard-124:
-    image: opensearchproject/opensearch-dashboards:1
+  opensearch_dashboard_124:
+    image: opensearchproject/opensearch-dashboards:1.2.0
     restart: always
     ports:
       - "5603:5601"
@@ -89,13 +95,14 @@ services:
       - search-network
 
   # OpenSearch Dashboard 2.12.0
-  opensearch-dashboard-2120:
-    image: opensearchproject/opensearch-dashboards:2
+  opensearch_dashboard_2120:
+    image: opensearchproject/opensearch-dashboards:2.12.0
     restart: always
     ports:
       - "5601:5601"
     environment:
       OPENSEARCH_HOSTS: 'http://opensearch_2120:9200'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
     volumes:
       - opensearch-dashboard-2120-data:/usr/share/opensearch-dashboards/data
     depends_on:
