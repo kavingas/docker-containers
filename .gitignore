@@ -7,3 +7,11 @@ adobe-commerce/utils/.composer/auth.json
 adobe-commerce/utils/.m2install.conf
 adobe-commerce/utils/.cache
 elasticsearch/data
+aem/aem-sdk
+aem/author
+.DS_Store
+.idea
+.vscode
+*.log
+*.tmp
+data

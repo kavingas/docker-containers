@@ -6,13 +6,13 @@ ENV AEM_HOME=/opt/aem
 ENV AEM_JAR=aem-quickstart.jar
 ENV AUTHOR_PORT=4502
 ENV AEM_RUNMODE=author
-ENV JAVA_OPTS="-Xms2g -Xmx4g -XX:MaxPermSize=512m"
+ENV JAVA_OPTS="-Xms1g -Xmx2g -XX:MaxPermSize=512m"
 
 # Step 3: Create necessary directories
 RUN mkdir -p ${AEM_HOME} ${AEM_HOME}/crx-quickstart ${AEM_HOME}/license
 
 # Step 4: Copy the AEM jar and license file into the container
-COPY ${AEM_JAR} ${AEM_HOME}/${AEM_JAR}
+COPY aem-sdk/aem-sdk-quickstart-*.jar ${AEM_HOME}/${AEM_JAR}
 
 # Step 5: Expose port for AEM Author
 EXPOSE ${AUTHOR_PORT}

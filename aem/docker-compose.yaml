@@ -8,29 +8,29 @@ services:
     environment:
       - AUTHOR_PORT=4502
       - AEM_RUNMODE=author
-      - JAVA_OPTS=-Xms2g -Xmx4g -XX:MaxPermSize=512m
+      - JAVA_OPTS=-Xms1g -Xmx2g -XX:MaxPermSize=512m
       - ADMIN_PASSWORD=admin  # Set the default admin password here
     volumes:
       - ./author/crx-quickstart:/opt/aem/crx-quickstart  # Persisting data locally
       - ./author/logs:/opt/aem/crx-quickstart/logs       # Persist logs locally
     networks:
       - aem-network
-  aem-publish:
-    build: .
-    container_name: aem-publish
-    ports:
-      - "4503:4503"  # Exposing AEM Author port
-    stop_signal: SIGINT 
-    environment:
-      - AUTHOR_PORT=4503
-      - AEM_RUNMODE=publish
-      - JAVA_OPTS=-Xms2g -Xmx4g -XX:MaxPermSize=512m
-      - ADMIN_PASSWORD=admin  # Set the default admin password here
-    volumes:
-      - ./publish/crx-quickstart:/opt/aem/crx-quickstart  # Persisting data locally
-      - ./publish/logs:/opt/aem/crx-quickstart/logs       # Persist logs locally
-    networks:
-      - aem-network
+  # aem-publish:
+  #   build: .
+  #   container_name: aem-publish
+  #   ports:
+  #     - "4503:4503"  # Exposing AEM Author port
+  #   stop_signal: SIGINT 
+  #   environment:
+  #     - AUTHOR_PORT=4503
+  #     - AEM_RUNMODE=publish
+  #     - JAVA_OPTS=-Xms2g -Xmx4g -XX:MaxPermSize=512m
+  #     - ADMIN_PASSWORD=admin  # Set the default admin password here
+  #   volumes:
+  #     - ./publish/crx-quickstart:/opt/aem/crx-quickstart  # Persisting data locally
+  #     - ./publish/logs:/opt/aem/crx-quickstart/logs       # Persist logs locally
+  #   networks:
+  #     - aem-network
 
 networks:
   aem-network:

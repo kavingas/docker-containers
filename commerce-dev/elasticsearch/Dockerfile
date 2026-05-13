@@ -10,6 +10,7 @@ RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
 
 RUN echo "xpack.security.enabled: false" >> /usr/share/elasticsearch/config/elasticsearch.yml
 RUN echo "discovery.type: single-node" >> /usr/share/elasticsearch/config/elasticsearch.yml
+RUN echo "indices.query.bool.max_clause_count: 10240" >> /usr/share/elasticsearch/config/elasticsearch.yml
 RUN bin/elasticsearch-plugin install -b analysis-icu && \
     bin/elasticsearch-plugin install -b analysis-phonetic
 

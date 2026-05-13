@@ -1,0 +1,28 @@
+services:
+  valkey:
+    image: valkey/valkey:8.0.1
+    container_name: valkey-8.0.1
+    ports:
+      - "6370:6379"
+    volumes:
+      - ./data:/data
+    command: >
+      valkey-server
+      --maxmemory 2G
+      --maxmemory-policy allkeys-lru
+      --dir /data
+      --dbfilename dump.rdb
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - valkey-network
+
+networks:
+  valkey-network:
+    driver: bridge
+
