@@ -1,0 +1,19 @@
+services:
+  varnish:
+    image: varnish:7
+    platform: linux/amd64
+    container_name: varnish
+    ports:
+      - "8181:80"
+    volumes:
+      - ./default.vcl:/etc/varnish/default.vcl:ro
+    environment:
+      - VARNISH_SIZE=256M
+    command: >
+      varnishd
+      -F
+      -a :80
+      -f /etc/varnish/default.vcl
+      -s malloc,256M
+      -j none
+    restart: unless-stopped

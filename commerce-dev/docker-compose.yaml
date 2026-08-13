@@ -1,20 +1,65 @@
 services:
   # Elasticsearch 7.11.2
-  elasticsearch:
-    build: ./elasticsearch
-    environment:
-      discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
-      cluster.routing.allocation.disk.threshold_enabled: "false"
+  # elasticsearch:
+  #   build: ./elasticsearch
+  #   environment:
+  #     discovery.type: single-node
+  #     ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+  #     cluster.routing.allocation.disk.threshold_enabled: "false"
+  #   restart: unless-stopped
+  #   ports:
+  #     - "9200:9200"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - elasticsearch-data:/usr/share/elasticsearch/data
+  #   networks:
+  #     - search-network
+
+  opensearch_2194:
+    image: opensearchproject/opensearch:2.19.4
     restart: unless-stopped
-    ports:
-      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+      - opensearch-2194-data:/usr/share/opensearch/data
+      - ./opensearch/2.19.4/config/opensearch.yml:/usr/share/opensearch/config/opensearch.yml
+    ports:
+      - "9201:9200"
+      - "9601:9600"
+    networks:
+      - search-network
+
+  # OpenSearch 3.7.0
+  opensearch_370:
+    image: opensearchproject/opensearch:3.7.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - bootstrap.memory_lock=true
+      - plugins.ml_commons.only_run_on_ml_node=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - opensearch-370-data:/usr/share/opensearch/data
+    ports:
+      - "9202:9200"
+      - "9602:9600"
     networks:
       - search-network
 
@@ -138,7 +183,7 @@ services:
   #     - ./mariadb/my.cnf:/etc/mysql/my.cnf
   #   networks:
   #     - search-network
-  
+
   # mariadb114:
   #   image: mariadb:11.4
   #   restart: unless-stopped
@@ -152,7 +197,7 @@ services:
   #     - ./mariadb/my.cnf:/etc/mysql/my.cnf
   #   networks:
   #     - search-network
-  
+
   # mysql80:
   #   image: mysql:8.0
   #   restart: unless-stopped
@@ -168,7 +213,7 @@ services:
   #     - search-network
 
   rabbitmq:
-    hostname: 'rabbitmq'
+    hostname: "rabbitmq"
     image: rabbitmq:3.13.7-management-alpine
     restart: unless-stopped
     ports:
@@ -178,7 +223,7 @@ services:
       - rabbitmq3_data:/var/lib/rabbitmq
 
   rabbitmq41:
-    hostname: 'rabbitmq'
+    hostname: "rabbitmq"
     image: rabbitmq:4.1.4-management-alpine
     restart: unless-stopped
     ports:
@@ -186,18 +231,39 @@ services:
       - "15673:15672"
     volumes:
       - rabbitmq4_data:/var/lib/rabbitmq
-  
+
   valkey:
     image: valkey/valkey:8.0.1
     container_name: valkey-8.0.1
     ports:
       - "6370:6379"
+      - "6379:6379"
     volumes:
       - ./valkey/data:/data
     command: >
       valkey-server
     restart: unless-stopped
-    
+
+  varnish7:
+    image: varnish:7
+    container_name: varnish7
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8181:80"
+    volumes:
+      - ./varnish/7.5.1/default.vcl:/etc/varnish/default.vcl:ro
+    environment:
+      - VARNISH_SIZE=256M
+    command: >
+      varnishd
+      -F
+      -a :80
+      -f /etc/varnish/default.vcl
+      -s malloc,256M
+      -j none
+    restart: unless-stopped
+
 networks:
   search-network:
     driver: bridge
@@ -206,6 +272,8 @@ volumes:
   elasticsearch-data:
   opensearch-124-data:
   opensearch-2120-data:
+  opensearch-2194-data:
+  opensearch-370-data:
   elasticsearch-dashboard-data:
   opensearch-dashboard-124-data:
   opensearch-dashboard-2120-data:
